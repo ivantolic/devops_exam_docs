@@ -1,0 +1,24 @@
+# LO4.24 — ConfigMap mounted as a volume
+# Goal: mount all keys from ConfigMap "appcfg" into the Pod as files.
+# Before applying this file, create the ConfigMap:
+# kubectl create configmap appcfg --from-literal=color=blue --from-literal=mode=dark --dry-run=client -o yaml | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cm-demo
+spec:
+  volumes:
+  - name: cfg
+    # This volume is populated from the ConfigMap named appcfg.
+    # Each ConfigMap key becomes a file inside the mounted directory.
+    configMap:
+      name: appcfg
+  containers:
+  - name: app
+    image: busybox
+    # Keep the Pod alive for kubectl exec testing.
+    command: ["sh", "-c", "sleep 3600"]
+    volumeMounts:
+    - name: cfg
+      # Files will appear here, for example /etc/cfg/color and /etc/cfg/mode.
+      mountPath: /etc/cfg

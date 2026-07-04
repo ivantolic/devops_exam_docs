@@ -1,0 +1,24 @@
+# LO4.17 — DaemonSet example
+# Goal: run one small "agent" Pod on every Kubernetes node.
+# DaemonSet is used for node-level services like logging agents, monitoring agents, or CNI/network agents.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: agent
+spec:
+  # selector tells the DaemonSet which Pods belong to it.
+  selector:
+    matchLabels:
+      app: agent
+  template:
+    metadata:
+      # Pod labels must match the selector above.
+      labels:
+        app: agent
+    spec:
+      containers:
+      - name: agent
+        image: busybox
+        # BusyBox would exit immediately without a long-running command.
+        # This keeps the container alive so the Pod stays Running.
+        command: ["sh", "-c", "while true; do sleep 3600; done"]

@@ -1,0 +1,29 @@
+# LO4.28 — initContainer pre-populates data
+# Goal: initContainer writes data into a shared volume before main container starts.
+# Init containers always run to completion before normal containers start.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-demo
+spec:
+  volumes:
+  - name: data
+    # emptyDir is temporary storage for this Pod.
+    # Both initContainer and app container can use it.
+    emptyDir: {}
+  initContainers:
+  - name: seed
+    image: busybox
+    # This writes a file before the main app container starts.
+    command: ["sh", "-c", "echo seeded > /data/file"]
+    volumeMounts:
+    - name: data
+      mountPath: /data
+  containers:
+  - name: app
+    image: busybox
+    # Main container can read the file created by the initContainer.
+    command: ["sh", "-c", "cat /data/file; sleep 3600"]
+    volumeMounts:
+    - name: data
+      mountPath: /data

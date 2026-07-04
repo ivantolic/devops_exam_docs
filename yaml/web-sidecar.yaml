@@ -1,0 +1,38 @@
+# LO4.13 — Deployment with sidecar container
+# Goal: nginx serves a file that is continuously written by a sidecar container.
+# This demonstrates that containers in the same Pod can share volumes and network namespace.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-sidecar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-sidecar
+  template:
+    metadata:
+      labels:
+        app: web-sidecar
+    spec:
+      volumes:
+      - name: shared
+        # Shared temporary volume for both containers in this Pod.
+        emptyDir: {}
+      containers:
+      - name: nginx
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: shared
+          # nginx serves files from this directory.
+          mountPath: /usr/share/nginx/html
+      - name: sidecar
+        image: busybox
+        # Sidecar updates index.html every 10 seconds.
+        command: ["sh", "-c", "while true; do date > /data/index.html; sleep 10; done"]
+        volumeMounts:
+        - name: shared
+          # Same volume, different path inside sidecar container.
+          mountPath: /data

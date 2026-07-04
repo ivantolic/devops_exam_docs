@@ -1,0 +1,25 @@
+# LO4.22 — Two containers share emptyDir
+# Goal: writer container creates a file; reader container reads the same file.
+# This proves that both containers can share the same Pod volume.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shared-demo
+spec:
+  volumes:
+  - name: shared
+    # emptyDir is created when the Pod starts and deleted when the Pod is removed.
+    emptyDir: {}
+  containers:
+  - name: writer
+    image: busybox
+    command: ["sh", "-c", "echo hello > /data/msg; sleep 3600"]
+    volumeMounts:
+    - name: shared
+      mountPath: /data
+  - name: reader
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+    volumeMounts:
+    - name: shared
+      mountPath: /data

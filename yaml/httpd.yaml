@@ -1,0 +1,27 @@
+# LO4.14 — Deployment with nodeSelector and named port
+# Goal: create an httpd Deployment with 2 replicas, a named container port, and nodeSelector.
+# Important: Pods stay Pending if no node has label disktype=ssd.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: httpd
+  template:
+    metadata:
+      labels:
+        app: httpd
+    spec:
+      # Scheduler can place this Pod only on nodes with label disktype=ssd.
+      # If no node matches, Pod status becomes Pending.
+      nodeSelector:
+        disktype: ssd
+      containers:
+      - name: httpd
+        image: httpd:2.4
+        ports:
+        - name: http
+          containerPort: 80

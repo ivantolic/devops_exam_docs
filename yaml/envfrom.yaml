@@ -1,0 +1,18 @@
+# LO4.35 — Load all Secret keys as environment variables
+# Goal: use envFrom.secretRef so every key from Secret dbcreds becomes an env variable.
+# Before applying this file, create the Secret:
+# kubectl create secret generic dbcreds --from-literal=username=admin --from-literal=password=s3cret --dry-run=client -o yaml | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: envfrom-demo
+spec:
+  containers:
+  - name: app
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+    envFrom:
+    - secretRef:
+        # All keys in this Secret become environment variables.
+        # Example: username=admin and password=s3cret.
+        name: dbcreds

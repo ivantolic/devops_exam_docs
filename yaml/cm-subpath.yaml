@@ -1,0 +1,23 @@
+# LO4.25 — Mount one ConfigMap key using subPath
+# Goal: mount only the "color" key from ConfigMap appcfg as one specific file.
+# This is useful when you do not want to replace/hide the whole target directory.
+# Caveat: subPath mounts do NOT update live when the ConfigMap changes; restart the Pod.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cm-subpath
+spec:
+  volumes:
+  - name: cfg
+    configMap:
+      name: appcfg
+  containers:
+  - name: app
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+    volumeMounts:
+    - name: cfg
+      # This creates one file at this exact path.
+      mountPath: /etc/app/color.conf
+      # Only the ConfigMap key "color" is mounted here.
+      subPath: color

@@ -1,0 +1,42 @@
+# LO4.50 / LO4.52 / LO4.53 — HTTP probes for nginx
+# Goal: show liveness, readiness, and startup probes on a web Deployment.
+# livenessProbe: restarts container if app is unhealthy.
+# readinessProbe: removes Pod from Service endpoints if app is not ready.
+# startupProbe: gives slow-starting app time before liveness starts killing it.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-probes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-probes
+  template:
+    metadata:
+      labels:
+        app: web-probes
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
+        startupProbe:
+          httpGet:
+            path: /
+            port: 80
+          # 30 * 5 = 150 seconds startup budget.
+          failureThreshold: 30
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10

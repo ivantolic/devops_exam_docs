@@ -1,0 +1,61 @@
+# LO4.47 — Two Deployments behind one Service
+# Goal: one Service load-balances across Pods from two different Deployments.
+# Both Deployments share label app=shop, so the Service selector matches both.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shop-v1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shop
+      ver: v1
+  template:
+    metadata:
+      labels:
+        app: shop
+        ver: v1
+    spec:
+      containers:
+      - name: echo
+        image: hashicorp/http-echo
+        args: ["-text=from-v1"]
+        ports:
+        - containerPort: 5678
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shop-v2
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shop
+      ver: v2
+  template:
+    metadata:
+      labels:
+        app: shop
+        ver: v2
+    spec:
+      containers:
+      - name: echo
+        image: hashicorp/http-echo
+        args: ["-text=from-v2"]
+        ports:
+        - containerPort: 5678
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shop
+spec:
+  # This selector matches BOTH Deployments because both have app=shop.
+  selector:
+    app: shop
+  ports:
+  - port: 80
+    # Traffic to Service port 80 is forwarded to container port 5678.
+    targetPort: 5678

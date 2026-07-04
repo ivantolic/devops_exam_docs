@@ -1,0 +1,47 @@
+# LO4.27 — StatefulSet with one PVC per replica
+# Goal: show that each StatefulSet replica gets its own persistent volume claim.
+# Example PVC names: data-redis-pvc-0, data-redis-pvc-1, data-redis-pvc-2.
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-pvc
+spec:
+  clusterIP: None
+  selector:
+    app: redis-pvc
+  ports:
+  - port: 6379
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-pvc
+spec:
+  serviceName: redis-pvc
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redis-pvc
+  template:
+    metadata:
+      labels:
+        app: redis-pvc
+    spec:
+      containers:
+      - name: redis
+        image: redis:7
+        volumeMounts:
+        - name: data
+          # Redis can use this path for persistent data.
+          mountPath: /data
+  # IMPORTANT: volumeClaimTemplates is on StatefulSet spec level, not inside container.
+  # Kubernetes creates one PVC from this template for each replica.
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi

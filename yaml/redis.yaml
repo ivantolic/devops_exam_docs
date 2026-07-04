@@ -1,0 +1,38 @@
+# LO4.16 / LO4.41 — StatefulSet with headless Service
+# Goal: create Redis StatefulSet with stable Pod names and per-Pod DNS.
+# Headless Service has clusterIP: None, so DNS returns Pod records instead of one virtual IP.
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  # Headless Service: no ClusterIP / no single VIP.
+  clusterIP: None
+  selector:
+    app: redis
+  ports:
+  - name: redis
+    port: 6379
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+spec:
+  # StatefulSet needs serviceName that points to the headless Service.
+  serviceName: redis
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:7
+        ports:
+        - name: redis
+          containerPort: 6379

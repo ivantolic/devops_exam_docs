@@ -1,0 +1,27 @@
+# LO4.51 — Redis readiness probe
+# Goal: mark Redis Pod Ready only when TCP port 6379 is reachable.
+# Readiness probe controls whether the Pod is added to Service endpoints.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-readiness
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-readiness
+  template:
+    metadata:
+      labels:
+        app: redis-readiness
+    spec:
+      containers:
+      - name: redis
+        image: redis:7
+        ports:
+        - containerPort: 6379
+        readinessProbe:
+          tcpSocket:
+            # Kubernetes checks if TCP connection to Redis port works.
+            port: 6379
+          periodSeconds: 5

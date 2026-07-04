@@ -1,0 +1,19 @@
+# LO4.29 — Read-only volume mount
+# Goal: mount a volume as read-only and prove writes are rejected.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: readonly-demo
+spec:
+  volumes:
+  - name: data
+    emptyDir: {}
+  containers:
+  - name: app
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+    volumeMounts:
+    - name: data
+      mountPath: /data
+      # Container can read from /data but cannot write into it.
+      readOnly: true
