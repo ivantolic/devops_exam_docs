@@ -1,4 +1,4 @@
-# PAST EXAM EXPANDED ADDENDUM — dodatna pitanja, odgovori, objašnjenja i slične situacije
+# dodatna pitanja, odgovori, objašnjenja i slične situacije
 
 Ovaj dokument je **dodatak** tvojim finalnim DevOps materijalima.
 
@@ -14,7 +14,6 @@ yaml/
 ```
 
 Ovaj dokument služi za:
-- pitanja s prošlog ispita,
 - objašnjenje što je tu dodatno u odnosu na tvoje glavne dokumente,
 - “što ako profesor promijeni ime/image/port/ConfigMap/selector” situacije,
 - typed answers na engleskom ako moraš pisati objašnjenje.
@@ -54,9 +53,9 @@ Isto vrijedi za:
 
 ---
 
-# LO4 — pitanja s prošlog ispita
+# LO4
 
-## LO4.1 — Deployment `static-site-deployment` s 2 replike i `nginx:alpine`
+## 1 — Deployment `static-site-deployment` s 2 replike i `nginx:alpine`
 
 ### Pitanje
 
@@ -121,7 +120,7 @@ I created a Deployment named `static-site-deployment` with two replicas using th
 
 ---
 
-## LO4.2 — ConfigMap `site-content`, key `index.html`, mount preko `subPath`
+## 2
 
 ### Pitanje
 
@@ -398,7 +397,7 @@ I created a ConfigMap named `site-content` with the key `index.html`. Then I mou
 
 ---
 
-## LO4.3 — Rolling update na `nginx:stable-alpine`, history, rollback i dokaz da je image opet `nginx:alpine`
+## 3 — Rolling update na `nginx:stable-alpine`, history, rollback i dokaz da je image opet `nginx:alpine`
 
 ### Pitanje
 
@@ -701,7 +700,7 @@ The Dockerfile is wrong because `FRM` should be `FROM`, Ubuntu uses `apt-get` in
 
 ---
 
-## LO5.3 — Kubernetes manifest: indentation + selector mismatch
+## 3 — Kubernetes manifest: indentation + selector mismatch
 
 ### Pitanje
 
@@ -837,9 +836,9 @@ The manifest is wrong because the YAML indentation is broken and the Deployment 
 
 ---
 
-# LO6 — pitanja s prošlog ispita
+# LO6
 
-## LO6.1 — Kubernetes vs Docker Swarm za startup s malo DevOps znanja
+## 1 — Kubernetes vs Docker Swarm za startup s malo DevOps znanja
 
 ### Pitanje
 
@@ -878,7 +877,7 @@ For a small startup, I would recommend Docker Swarm if the application is simple
 
 ---
 
-## LO6.2 — Healthcare hybrid cloud: OpenShift vs Kubernetes
+## 2 — Healthcare hybrid cloud: OpenShift vs Kubernetes
 
 ### Pitanje
 
@@ -951,7 +950,7 @@ For global e-commerce, the platform must handle traffic growth, failures and man
 
 # 7 dodatnih sličnih situacija koje se mogu pojaviti
 
-## Extra LO4.1 — Deployment name/image/replicas changed again
+## Extra lo41 — Deployment name/image/replicas changed again
 
 ### Possible question
 
