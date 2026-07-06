@@ -1,3 +1,4 @@
+pitanje → Ctrl+F u GitHub dokumentima → nađeš primjer → prilagodiš ime/image/port → udariš komande → provjeriš → screenshot → zalijepiš u LibreOffice → ideš dalje
 # Safe copy/paste rules for the exam
 
 Ovo su pravila za korištenje ovih dokumenata na ispitu.
